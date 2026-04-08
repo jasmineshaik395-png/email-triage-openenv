@@ -3,7 +3,7 @@ Sample emails used in all 3 tasks.
 Easy task uses TASK_1_EMAILS, Medium uses TASK_2_EMAILS, Hard uses TASK_3_EMAILS.
 """
 
-from env.models import Email, EmailCategory, EmailPriority
+from models import Email, EmailCategory, EmailPriority
 
 # ──────────────────────────────────────────────
 # TASK 1 – EASY: Just CLASSIFY emails
