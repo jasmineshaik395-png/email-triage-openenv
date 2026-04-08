@@ -112,8 +112,10 @@ def list_tasks():
 
 
 @app.post("/reset")
-def reset(request: ResetRequest):
+def reset(request: Optional[ResetRequest] = None):
     """Start a fresh episode for the given task."""
+    if request is None:
+        request = ResetRequest()
     if request.task not in ("easy", "medium", "hard"):
         raise HTTPException(400, "task must be: easy | medium | hard")
 
