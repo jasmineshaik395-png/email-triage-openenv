@@ -17,7 +17,7 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from typing import Any, Dict, Optional
 
-from env.environment import EmailTriageEnv
+from environment import EmailTriageEnv
 
 # ── App setup ──
 app = FastAPI(
