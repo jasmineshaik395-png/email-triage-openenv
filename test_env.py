@@ -7,7 +7,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from env.environment import EmailTriageEnv
+from environment import EmailTriageEnv
 from graders.graders import grade_easy, grade_medium, grade_hard, run_episode
 
 
