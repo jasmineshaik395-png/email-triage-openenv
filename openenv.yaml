@@ -19,7 +19,7 @@ tags:
 # ── Environment Details ──
 environment:
   class: EmailTriageEnv
-  module: env.environment
+  module: environment
   reset_method: reset
   step_method: step
   state_method: state
@@ -90,7 +90,7 @@ tasks:
     pass_threshold: 0.70
     num_episodes: 8
     difficulty: easy
-    grader: graders.graders.grade_easy
+    grader: graders.grade_easy
     reward_components:
       - classification_score: weight 1.0
       - penalty: for invalid actions
@@ -101,7 +101,7 @@ tasks:
     pass_threshold: 0.55
     num_episodes: 8
     difficulty: medium
-    grader: graders.graders.grade_medium
+    grader: graders.grade_medium
     reward_components:
       - classification_score: weight 0.5
       - priority_score: weight 0.5
@@ -113,7 +113,7 @@ tasks:
     pass_threshold: 0.40
     num_episodes: 6
     difficulty: hard
-    grader: graders.graders.grade_hard
+    grader: graders.grade_hard
     reward_components:
       - classification_score: weight 0.3
       - priority_score: weight 0.3
