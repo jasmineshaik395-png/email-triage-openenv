@@ -1,5 +1,5 @@
-from env.environment import EmailTriageEnv
-from env.models import Action, ActionType, EmailCategory, EmailPriority, Observation, Reward
+from environment import EmailTriageEnv
+from models import Action, ActionType, EmailCategory, EmailPriority, Observation, Reward
 
 __all__ = [
     "EmailTriageEnv",
