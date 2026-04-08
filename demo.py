@@ -7,7 +7,7 @@ No API key needed – uses a simple rule-based agent.
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from env.environment import EmailTriageEnv
+from environment import EmailTriageEnv
 
 
 def rule_based_agent(obs: dict) -> dict:
