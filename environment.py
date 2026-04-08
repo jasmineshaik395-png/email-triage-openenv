@@ -6,11 +6,11 @@ Implements the full OpenEnv API: reset() / step() / state()
 import copy
 from typing import Any, Dict, List, Optional, Tuple
 
-from env.models import (
+from emodels import (
     Action, ActionType, Email, EmailCategory, EmailPriority,
     Observation, Reward,
 )
-from env.emails import TASK_1_EMAILS, TASK_2_EMAILS, TASK_3_EMAILS
+from emails import TASK_1_EMAILS, TASK_2_EMAILS, TASK_3_EMAILS
 
 
 class EmailTriageEnv:
