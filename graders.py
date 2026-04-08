@@ -5,7 +5,7 @@ These are the "judges" that evaluate agent performance.
 """
 
 from typing import Callable, Dict, Any
-from env.environment import EmailTriageEnv
+from environment import EmailTriageEnv
 
 
 def run_episode(task: str, agent_fn: Callable[[Dict], Dict]) -> Dict[str, Any]:
