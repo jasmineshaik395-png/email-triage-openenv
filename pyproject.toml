@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "your-project-name"
+version = "0.1.0"
+description = "Your project description"
+requires-python = ">=3.8"
+dependencies = [
+    # Add your dependencies here, e.g.:
+    # "numpy",
+    # "torch",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
