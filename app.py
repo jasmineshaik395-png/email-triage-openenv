@@ -1,14 +1,12 @@
 """
-FastAPI Server – exposes the environment as a REST API.
+FastAPI Server - exposes the environment as a REST API.
 """
-
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from typing import Any, Dict, Optional
-
 from environment import EmailTriageEnv
 
 app = FastAPI(
@@ -29,6 +27,7 @@ _envs: Dict[str, EmailTriageEnv] = {}
 
 class ResetRequest(BaseModel):
     task: str = "easy"
+
 
 class StepRequest(BaseModel):
     task: str = "easy"
@@ -96,7 +95,6 @@ def reset(request: Optional[ResetRequest] = None):
         request = ResetRequest()
     if request.task not in ("easy", "medium", "hard"):
         raise HTTPException(400, "task must be: easy | medium | hard")
-
     env = EmailTriageEnv(task=request.task)
     _envs[request.task] = env
     obs = env.reset()
@@ -108,12 +106,10 @@ def step(request: StepRequest):
     env = _envs.get(request.task)
     if env is None:
         raise HTTPException(400, f"No active episode for task '{request.task}'. Call /reset first.")
-
     try:
         obs, reward, done, info = env.step(request.action)
     except RuntimeError as e:
         raise HTTPException(400, str(e))
-
     return {
         "observation": obs,
         "reward": reward,
