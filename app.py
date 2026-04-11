@@ -1,13 +1,5 @@
 """
 FastAPI Server – exposes the environment as a REST API.
-This is what runs on Hugging Face Spaces.
-
-Endpoints:
-  POST /reset          – start a new episode
-  POST /step           – take an action
-  GET  /state          – get current state
-  GET  /tasks          – list available tasks
-  GET  /health         – health check
 """
 
 import uvicorn
@@ -19,7 +11,6 @@ from typing import Any, Dict, Optional
 
 from environment import EmailTriageEnv
 
-# ── App setup ──
 app = FastAPI(
     title="OpenEnv Email Triage",
     description="A real-world email triage environment for AI agents.",
@@ -33,23 +24,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ── In-memory sessions (one per task for simplicity) ──
 _envs: Dict[str, EmailTriageEnv] = {}
 
 
-# ── Request / Response models ──
-
 class ResetRequest(BaseModel):
-    task: str = "easy"   # easy | medium | hard
+    task: str = "easy"
 
 class StepRequest(BaseModel):
     task: str = "easy"
     action: Dict[str, Any]
 
-
-# ──────────────────────────────────────────────
-# Endpoints
-# ──────────────────────────────────────────────
 
 @app.get("/", response_class=HTMLResponse)
 def root():
@@ -61,13 +45,8 @@ def root():
     <p>A real-world AI agent environment. Use the API to train agents on email triage.</p>
     <h2>Quick Start</h2>
     <pre>
-# 1. Reset (start episode)
 POST /reset  {"task": "easy"}
-
-# 2. Step (take action)
 POST /step   {"task": "easy", "action": {"action_type": "classify", "category": "urgent"}}
-
-# 3. Get state
 GET  /state?task=easy
     </pre>
     <p>→ <a href="/docs" style="color:#00ff88">Interactive API Docs</a></p>
@@ -90,21 +69,21 @@ def list_tasks():
                 "name": "easy",
                 "description": "Classify emails as urgent/important/normal/spam",
                 "num_emails": 8,
-                "pass_threshold": 0.70,
+                "passing_score": 0.70,
                 "actions_needed": ["classify"],
             },
             {
                 "name": "medium",
                 "description": "Classify emails AND set priority (high/medium/low)",
                 "num_emails": 8,
-                "pass_threshold": 0.55,
+                "passing_score": 0.55,
                 "actions_needed": ["classify", "priority"],
             },
             {
                 "name": "hard",
                 "description": "Classify, prioritize, AND write a professional reply",
                 "num_emails": 6,
-                "pass_threshold": 0.40,
+                "passing_score": 0.40,
                 "actions_needed": ["classify", "priority", "respond"],
             },
         ]
@@ -113,7 +92,6 @@ def list_tasks():
 
 @app.post("/reset")
 def reset(request: Optional[ResetRequest] = None):
-    """Start a fresh episode for the given task."""
     if request is None:
         request = ResetRequest()
     if request.task not in ("easy", "medium", "hard"):
@@ -127,7 +105,6 @@ def reset(request: Optional[ResetRequest] = None):
 
 @app.post("/step")
 def step(request: StepRequest):
-    """Take one action in the environment."""
     env = _envs.get(request.task)
     if env is None:
         raise HTTPException(400, f"No active episode for task '{request.task}'. Call /reset first.")
@@ -147,16 +124,11 @@ def step(request: StepRequest):
 
 @app.get("/state")
 def state(task: str = "easy"):
-    """Get current environment state."""
     env = _envs.get(task)
     if env is None:
         raise HTTPException(400, f"No active episode for task '{task}'. Call /reset first.")
     return env.state()
 
-
-# ──────────────────────────────────────────────
-# Entry point
-# ──────────────────────────────────────────────
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=7860, reload=False)
