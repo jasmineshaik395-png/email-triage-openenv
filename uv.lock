@@ -24,8 +24,6 @@ requires-dist = [
   { name = "openenv-core", specifier = ">=0.2.0" },
 ]
 
-[package.metadata.requires-dev]
-
 [[package]]
 name = "fastapi"
 version = "0.115.0"
