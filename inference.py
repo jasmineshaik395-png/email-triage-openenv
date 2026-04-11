@@ -1,7 +1,8 @@
 """
-inference.py – Baseline agent that runs the environment locally.
+inference.py - Baseline agent that runs the environment locally.
 """
 from environment import EmailTriageEnv
+
 
 def run_episode(task: str = "easy"):
     env = EmailTriageEnv(task=task)
@@ -16,6 +17,7 @@ def run_episode(task: str = "easy"):
             break
 
     print(f"Final score: {obs['current_score']:.3f}")
+
 
 if __name__ == "__main__":
     run_episode("easy")
