@@ -1,26 +1,21 @@
 """
-inference.py – Baseline agent that calls the live API.
+inference.py – Baseline agent that runs the environment locally.
 """
-import requests
-
-BASE_URL = "https://skjasmine-email-triage-openenv.hf.space"
+from environment import EmailTriageEnv
 
 def run_episode(task: str = "easy"):
-    # Reset
-    res = requests.post(f"{BASE_URL}/reset", json={"task": task})
-    obs = res.json()["observation"]
+    env = EmailTriageEnv(task=task)
+    obs = env.reset()
     print(f"Starting task: {task}")
 
     while True:
-        # Simple rule-based action
         action = {"action_type": "classify", "category": "normal"}
-        res = requests.post(f"{BASE_URL}/step", json={"task": task, "action": action})
-        data = res.json()
-        print(f"Reward: {data['reward']} | Done: {data['done']}")
-        if data["done"]:
+        obs, reward, done, info = env.step(action)
+        print(f"Reward: {reward:.3f} | Done: {done}")
+        if done:
             break
 
-    print(f"Final score: {data['observation']['current_score']}")
+    print(f"Final score: {obs['current_score']:.3f}")
 
 if __name__ == "__main__":
     run_episode("easy")
