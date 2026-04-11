@@ -10,16 +10,17 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
 keywords = ["openenv", "email", "triage", "rl", "agent"]
+
 dependencies = [
     "fastapi>=0.100.0",
     "uvicorn>=0.23.0",
     "pydantic>=2.0.0",
     "requests>=2.28.0",
-    "openenv-core>=0.2.0",
+    "openenv>=0.2.0",
 ]
 
 [project.scripts]
-server = "app:app"
+server = "app:main"
 
 [project.urls]
 Homepage = "https://huggingface.co/spaces/skjasmine/email-triage-openenv"
