@@ -1,6 +1,3 @@
-# openenv.yaml
-# Required metadata file for OpenEnv specification compliance.
-
 name: email-triage-openenv
 version: "1.0.0"
 description: >
@@ -16,7 +13,6 @@ tags:
   - triage
   - classification
 
-# ── Environment Details ──
 environment:
   class: EmailTriageEnv
   module: environment
@@ -24,7 +20,6 @@ environment:
   step_method: step
   state_method: state
 
-# ── Action Space ──
 action_space:
   type: dict
   fields:
@@ -36,22 +31,17 @@ action_space:
       type: enum
       values: [urgent, important, normal, spam]
       required: false
-      description: Required for classify/respond actions
     priority:
       type: enum
       values: [high, medium, low]
       required: false
-      description: Required for medium and hard tasks
     response_text:
       type: string
       required: false
-      description: Required for hard task (respond action)
     reason:
       type: string
       required: false
-      description: Optional explanation for the action
 
-# ── Observation Space ──
 observation_space:
   type: dict
   fields:
@@ -67,76 +57,56 @@ observation_space:
         is_reply: boolean
     inbox_count:
       type: integer
-      description: Remaining emails to process
     processed_count:
       type: integer
     current_score:
       type: float
       range: [0.0, 1.0]
-    day:
-      type: integer
     task_name:
       type: enum
       values: [easy, medium, hard]
     instructions:
       type: string
-      description: Plain English instructions for the agent
 
-# ── Tasks ──
 tasks:
   - name: easy
     description: Classify emails into correct categories
     objective: Correctly label each email as urgent/important/normal/spam
-    pass_threshold: 0.70
+    passing_score: 0.70
     num_episodes: 8
     difficulty: easy
     grader: graders.grade_easy
-    reward_components:
-      - classification_score: weight 1.0
-      - penalty: for invalid actions
 
   - name: medium
     description: Classify emails AND set the correct priority level
     objective: Correctly classify and prioritize each email
-    pass_threshold: 0.55
+    passing_score: 0.55
     num_episodes: 8
     difficulty: medium
     grader: graders.grade_medium
-    reward_components:
-      - classification_score: weight 0.5
-      - priority_score: weight 0.5
-      - penalty: for invalid actions
 
   - name: hard
     description: Classify, prioritize, and write a professional reply
     objective: Full email handling with quality written responses
-    pass_threshold: 0.40
+    passing_score: 0.40
     num_episodes: 6
     difficulty: hard
     grader: graders.grade_hard
-    reward_components:
-      - classification_score: weight 0.3
-      - priority_score: weight 0.3
-      - response_score: weight 0.4
-      - penalty: for missing response or invalid actions
 
-# ── Reward Details ──
 reward:
   range: [0.0, 1.0]
   type: float
   partial_progress: true
   description: >
-    Rewards are given at every step (not just episode end).
-    Partial credit is given for near-correct answers.
-    Penalties are applied for skipping, invalid actions, or missing responses.
+    Rewards are given at every step. Partial credit for near-correct answers.
+    Penalties for skipping, invalid actions, or missing responses.
 
-# ── Baseline Scores ──
 baseline_scores:
   random_agent:
-    easy: ~0.25
-    medium: ~0.17
-    hard: ~0.12
+    easy: 0.25
+    medium: 0.17
+    hard: 0.12
   llm_agent_gpt4o_mini:
-    easy: ~0.85
-    medium: ~0.72
-    hard: ~0.55
+    easy: 0.85
+    medium: 0.72
+    hard: 0.55
